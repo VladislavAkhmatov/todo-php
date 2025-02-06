@@ -23,15 +23,19 @@ $tasks = $task->AllTasks();
 
     <!-- Список задач -->
     <ul id="taskList" class="space-y-2">
+
+        <?php echo $_SESSION['name'] ?>
         <?php if ($tasks): ?>
             <?php foreach ($tasks as $item): ?>
                 <?= $item->user_id; ?>
                 <?= $item->name; ?>
                 <?= $item->age; ?>
                 <?= $item->email; ?>
-                <?= $item->pass; ?>
             <?php endforeach ?>
         <?php endif ?>
     </ul>
+    <form action="/logout" method="POST" class="mt-4 text-center">
+        <button name="logout" class="text-blue-500 hover:underline">Выйти</button>
+    </form>
 </div>
 <?php require_once __DIR__ . "/footer.php" ?>
