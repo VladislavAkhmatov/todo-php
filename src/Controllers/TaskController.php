@@ -19,6 +19,12 @@ class TaskController extends Connect
         $query->bindParam(":task_text", $task_text);
         return $query->execute();
     }
+
+    public function deleteTask($task_id){
+        $query = $this->db->prepare("DELETE FROM tasks WHERE task_id = :task_id");
+        $query->bindParam(":task_id", $task_id);
+        return $query->execute();
+    }
 }
 
 ?>
