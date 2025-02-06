@@ -8,14 +8,11 @@ $router = new AltoRouter();
 
 $router->setBasePath('');
 
-$router->map("GET", "/", function () {
-    require "index.php";
-});
 $router->map("GET", "/auth", function () {
     require __DIR__ . "/../views/get/auth.php";
 });
 
-$router->map("GET", "/tasks", function () {
+$router->map("GET", "/", function () {
     require __DIR__ . "/../views/get/tasks.php";
 });
 

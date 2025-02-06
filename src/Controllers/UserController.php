@@ -33,7 +33,8 @@ class UserController extends Connect
             $query->bindParam(':email', $email);
             $passHash = password_hash($pass, PASSWORD_DEFAULT);
             $query->bindParam(':pass', $passHash);
-            return $query->execute();
+            $query->execute();
+            return $this->db->lastInsertId();
         }else{
             echo "Такой email уже существует";
         }
@@ -46,6 +47,7 @@ class UserController extends Connect
         $user = $query->fetch(PDO::FETCH_OBJ);
         if($user){
             if(password_verify($pass, $user->pass)){
+                $_SESSION['user_id'] = $user->user_id;
                 $_SESSION['name'] = $user->name;
                 $_SESSION['age'] = $user->age;
                 $_SESSION['email'] = $user->email;

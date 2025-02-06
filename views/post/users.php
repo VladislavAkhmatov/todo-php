@@ -11,9 +11,14 @@ if(isset($_POST['reg'])){
 
     $user = new UserController();
 
-    if($user->saveUser($name, $age, $email, $pass)){
-
-        Header('location:' . '/tasks');
+    $userId = $user->saveUser($name, $age, $email, $pass);
+    if($userId){
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['name'] = $name;
+        $_SESSION['age'] = $age;
+        $_SESSION['email'] = $email;
+        Header('location:' . '/');
+        exit();
     }
 }
 
@@ -22,15 +27,18 @@ if(isset($_POST['auth'])){
     $pass = $_POST['pass'];
     $user = new UserController();
     if($user->userVerify($email, $pass)){
-        Header('location:' . '/tasks');
+        Header('location:' . '/');
+        exit();
     }else{
         Header('location:' . '/auth?q=err');
+        exit();
     }
 }
 
 if(isset($_POST['logout'])){
     session_destroy();
     header('location:' . '/auth');
+    exit();
 }
 
 
