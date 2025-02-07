@@ -13,14 +13,18 @@ $router->map("GET", "/auth", function () {
 });
 
 $router->map("GET", "/", function () {
-    require __DIR__ . "/../views/get/tasks.php";
+    require __DIR__ . "/../views/get/task.php";
+});
+
+$router->map("GET", "/edit/[i:id]", function ($id) {
+    require __DIR__ . "/../views/get/task-edit.php";
 });
 
 $router->map("GET", "/register", function(){
     require __DIR__ . "/../views/get/register.php";
 });
 
-$router->map("POST", "/tasks", function () {
+$router->map("POST", "/", function () {
     require __DIR__ . "/../views/post/tasks.php";
 });
 
@@ -37,14 +41,16 @@ $router->map("POST", "/logout", function () {
 });
 
 
-
-
 $match = $router->match();
-
 if ($match) {
-    call_user_func($match['target']);
+    if (is_callable($match['target'])) {
+        call_user_func_array($match['target'], $match['params']);
+    } else {
+        echo "Route target not callable!";
+    }
 } else {
     echo "Route not found!";
 }
+
 
 

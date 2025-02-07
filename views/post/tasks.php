@@ -17,7 +17,6 @@ if(isset($_POST['add_task'])){
 
 if(isset($_POST['delete_task'])){
     $task_id = $_POST['task_id'];
-    $task = new TaskController();
     if($task->deleteTask($task_id)){
         Header("Location: /");
         exit();
@@ -25,4 +24,15 @@ if(isset($_POST['delete_task'])){
         Header("Location: /?q=del");
         exit();
     }
+}
+
+if(isset($_POST['edit_task'])) {
+    $task_id = $_POST['task_id'];
+    $task_text = $_POST['task_text'];
+    if($task->editTask($task_id, $task_text)){
+        Header("Location: /");
+    }else{
+        Header("Location: /task/" . $task_id . "?q=edit");
+    }
+
 }
