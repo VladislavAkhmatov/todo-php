@@ -6,7 +6,9 @@ $task = new TaskController();
 if(isset($_POST['add_task'])){
     $task_text = $_POST['task_text'];
     $user_id = $_SESSION['user_id'];
-    if($task->saveTask($user_id, $task_text)){
+    $date_begin = $_POST['date_begin'];
+    $date_end = $_POST['date_end'];
+    if($task->saveTask($user_id, $task_text, $date_begin, $date_end)){
         Header("Location: /");
         exit();
     }else{

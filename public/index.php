@@ -20,6 +20,10 @@ $router->map("GET", "/edit/[i:id]", function ($id) {
     require __DIR__ . "/../views/get/task-edit.php";
 });
 
+$router->map("GET", "/show/[i:id]", function ($id) {
+    require __DIR__ . "/../views/get/task-show.php";
+});
+
 $router->map("GET", "/register", function(){
     require __DIR__ . "/../views/get/register.php";
 });

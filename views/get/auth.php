@@ -4,7 +4,7 @@ if(isset($_GET['q'])){
     $message = 'Ошибка. Такого пользователя не существует!';
 }
 ?>
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md" id="loginForm">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto flex-col" id="loginForm">
         <h2 class="text-2xl font-bold mb-4 text-center">Авторизация</h2>
         <?php if(isset($message)): ?>
             <p class="font-bold text-m text-center text-red-500 "><?= $message ?></p>
