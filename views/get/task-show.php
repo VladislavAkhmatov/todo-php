@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . "/header.php";
 use App\helper;
-$user_id = $_SESSION['user_id'];
 $taskObj = new \App\Controllers\TaskController();
 if(isset($id)) {
     $task = $taskObj->taskById($id);
@@ -22,7 +21,7 @@ if(isset($id)) {
     <label class="font-bold mt-4 block">Дата создания:</label>
     <p class="w-full p-2 bg-gray-100 rounded-lg"> <?= isset($task->date_begin) ? helper::formatDate($task->date_begin) : '' ?> </p>
 
-    <label class="font-bold mt-4 block">Дата выполнения:</label>
+    <label class="font-bold mt-4 block">Крайний срок выполнения:</label>
     <p class="w-full p-2 bg-gray-100 rounded-lg"> <?= isset($task->date_end) ? helper::formatDate($task->date_end) : '' ?> </p>
 
     <a href="/">

@@ -16,14 +16,6 @@ class TaskController extends Connect
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-    public function taskByUserId($user_id)
-    {
-        $query = $this->db->prepare("SELECT * FROM tasks WHERE user_id = :user_id");
-        $query->bindParam(":user_id", $user_id);
-        $query->execute();
-        return $query->fetch(PDO::FETCH_OBJ);
-    }
-
     public function tasksByUserId($user_id)
     {
         $query = $this->db->prepare("SELECT * FROM tasks WHERE user_id = :user_id");
@@ -51,11 +43,13 @@ class TaskController extends Connect
         return $query->execute();
     }
 
-    public function editTask($task_id, $task_text)
+    public function editTask($task_id, $task_text, $date_begin, $date_end)
     {
-        $query = $this->db->prepare("UPDATE tasks SET task_text = :task_text WHERE task_id = :task_id");
+        $query = $this->db->prepare("UPDATE tasks SET task_text = :task_text, date_begin = :date_begin, date_end = :date_end WHERE task_id = :task_id");
         $query->bindParam(":task_id", $task_id);
         $query->bindParam(":task_text", $task_text);
+        $query->bindParam(":date_begin", $date_begin);
+        $query->bindParam(":date_end", $date_end);
         return $query->execute();
     }
 }

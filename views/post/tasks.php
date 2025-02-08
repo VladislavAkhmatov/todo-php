@@ -31,7 +31,9 @@ if(isset($_POST['delete_task'])){
 if(isset($_POST['edit_task'])) {
     $task_id = $_POST['task_id'];
     $task_text = $_POST['task_text'];
-    if($task->editTask($task_id, $task_text)){
+    $date_begin = $_POST['date_begin'];
+    $date_end = $_POST['date_end'];
+    if($task->editTask($task_id, $task_text, $date_begin, $date_end)){
         Header("Location: /");
     }else{
         Header("Location: /task/" . $task_id . "?q=edit");

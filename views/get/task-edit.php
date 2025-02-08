@@ -1,8 +1,17 @@
 <?php
 require_once __DIR__ . "/header.php";
+use App\helper;
+
 $user_id = $_SESSION['user_id'];
 $taskObj = new \App\Controllers\TaskController();
-$task = $taskObj->taskByUserId($user_id);
+if(isset($id)) {
+    $task = $taskObj->taskById($id);
+    if(!$task){
+        Header('Location: /');
+    }
+}else{
+    Header('Location: /');
+}
 ?>
 <div class="bg-white p-6 rounded-lg shadow-lg w-96">
     <h2 class="text-xl font-bold mb-4">Редактирование текста</h2>
@@ -12,6 +21,19 @@ $task = $taskObj->taskByUserId($user_id);
                   class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows="4"><?= $task->task_text ?></textarea>
         <input type="hidden" name="task_id" value="<?= $task->task_id ?>">
+
+        <label for="endDate" class="block text-sm font-medium text-gray-700">Дата создания</label>
+        <input type="datetime-local" id="endDate" name="date_begin"
+               class="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="<?= helper::formatDateForDB($task->date_begin) ?>"
+               required>
+
+        <label for="endDate" class="block text-sm font-medium text-gray-700">Конечная дата</label>
+        <input type="datetime-local" id="endDate" name="date_end"
+               class="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+               value="<?= helper::formatDateForDB($task->date_end) ?>"
+               required>
+
 
         <button name="edit_task" type="submit"
                 class="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Сохранить

@@ -88,5 +88,15 @@ $tasks = $task->tasksByUserId($user_id);
             </table>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let now = new Date();
 
+            // Корректируем время на часовой пояс пользователя
+            let timezoneOffset = now.getTimezoneOffset() * 60000; // Получаем смещение в миллисекундах
+            let localDateTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+
+            document.getElementById("startDate").value = localDateTime;
+        });
+    </script>
 <?php require_once __DIR__ . "/footer.php" ?>

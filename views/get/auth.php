@@ -3,6 +3,10 @@ require_once __DIR__ . "/header.php" ;
 if(isset($_GET['q'])){
     $message = 'Ошибка. Такого пользователя не существует!';
 }
+
+if(isset($_SESSION['email'])){
+    Header('Location: /');
+}
 ?>
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto flex-col" id="loginForm">
         <h2 class="text-2xl font-bold mb-4 text-center">Авторизация</h2>
