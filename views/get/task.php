@@ -31,14 +31,14 @@ $tasks = $task->tasksByUserId($user_id);
                 <div>
                     <!-- Поле для ввода начальной даты -->
                     <label for="startDate" class="block text-sm font-medium text-gray-700">Начальная дата</label>
-                    <input type="date" id="startDate" name="date_begin"
+                    <input type="datetime-local" id="startDate" name="date_begin"
                            class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                            required>
                 </div>
                 <div>
                     <!-- Поле для ввода конечной даты -->
                     <label for="endDate" class="block text-sm font-medium text-gray-700">Конечная дата</label>
-                    <input type="date" id="endDate" name="date_end"
+                    <input type="datetime-local" id="endDate" name="date_end"
                            class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                            required>
                 </div>
