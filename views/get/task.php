@@ -3,6 +3,7 @@ require_once __DIR__ . "/header.php";
 
 use App\Controllers\TaskController;
 use App\helper;
+
 if (!isset($_SESSION['user_id'])) {
     Header("location: /auth");
     exit();
@@ -12,60 +13,70 @@ $task = new TaskController();
 $user_id = $_SESSION['user_id'];
 $tasks = $task->tasksByUserId($user_id);
 ?>
-    <div class="mb-6 bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
-        <h1 class="text-2xl font-bold text-center mb-2">Todo List</h1>
-        <h4 class="text-center font-bold mb-2">Добро пожаловать, <?= $_SESSION['name'] ?>.
-            <form action="/logout" method="POST">
-                <button name="logout" class="text-blue-500 hover:underline">Выйти</button>
-            </form>
-        </h4>
-        <form action="/" method="POST">
-            <div class="flex mb-6">
-                <input name="task_text" type="text" id="newTask" placeholder="Новая задача"
-                       class="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                       required>
 
-            </div>
 
-            <div class="flex justify-between mb-4">
-                <div>
-                    <!-- Поле для ввода начальной даты -->
-                    <label for="startDate" class="block text-sm font-medium text-gray-700">Начальная дата</label>
-                    <input type="datetime-local" id="startDate" name="date_begin"
-                           class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           required>
-                </div>
-                <div>
-                    <!-- Поле для ввода конечной даты -->
-                    <label for="endDate" class="block text-sm font-medium text-gray-700">Конечная дата</label>
-                    <input type="datetime-local" id="endDate" name="date_end"
-                           class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           required>
-                </div>
-            </div>
-            <button id="addTask"
-                    name="add_task"
-                    class="w-full mb-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-blue-500">
-                Добавить
-            </button>
+<div class="mb-6 bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+    <!-- Рекламные блоки -->
+    <div class="mb-6">
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
+            <p class="text-lg font-semibold">Реклама 1</p>
+            <p class="text-sm text-gray-600">Здесь может быть ваша реклама.</p>
+        </div>
+    </div>
+
+    <h1 class="text-2xl font-bold text-center mb-2">Todo List</h1>
+    <h4 class="text-center font-bold mb-2">Добро пожаловать, <?= $_SESSION['name'] ?>.
+        <form action="/logout" method="POST">
+            <button name="logout" class="text-blue-500 hover:underline">Выйти</button>
         </form>
-        <div class="overflow-x-hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-60 mx-auto">
-            <table class="w-full bg-white border border-gray-300">
-                <thead>
-                <tr>
-                    <th class="py-2 px-4 border-b">Задача</th>
-                    <th class="py-2 px-4 border-b hidden md:table-cell">Дата начала</th>
-                    <th class="py-2 px-4 border-b hidden md:table-cell">Дата окончания</th>
-                    <th class="py-2 px-4 border-b">Действия</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if ($tasks): ?>
-                    <?php foreach ($tasks as $task): ?>
+    </h4>
+    <form action="/" method="POST">
+        <div class="flex mb-6">
+            <input name="task_text" type="text" id="newTask" placeholder="Новая задача"
+                   class="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   required>
+        </div>
+        <div class="flex justify-between mb-4">
+            <div>
+                <label for="startDate" class="block text-sm font-medium text-gray-700">Начальная дата</label>
+                <input type="datetime-local" id="startDate" name="date_begin"
+                       class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       required>
+            </div>
+            <div>
+                <label for="endDate" class="block text-sm font-medium text-gray-700">Конечная дата</label>
+                <input type="datetime-local" id="endDate" name="date_end"
+                       class="mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       required>
+            </div>
+        </div>
+        <input type="hidden" name="overdue" value="1">
+        <button id="addTask"
+                name="add_task"
+                class="w-full mb-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-blue-500">
+            Добавить
+        </button>
+    </form>
+
+
+    <div class="overflow-x-hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-60 mx-auto">
+        <table class="w-full bg-white border border-gray-300">
+            <thead>
+            <tr>
+                <th class="py-2 px-4 border-b">Задача</th>
+                <th class="py-2 px-4 border-b hidden md:table-cell">Дата начала</th>
+                <th class="py-2 px-4 border-b hidden md:table-cell">Дата окончания</th>
+                <th class="py-2 px-4 border-b">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if ($tasks): ?>
+                <?php foreach ($tasks as $task): ?>
+                    <?php if (helper::checkOverdue($task->overdue)): ?>
                         <tr>
                             <td class="py-2 px-4 border-b"><?= htmlspecialchars($task->task_text) ?></td>
-                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_begin) ? helper::formatDate($task->date_begin) : ''  ?></td>
-                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_end) ? helper::formatDate($task->date_end) : ''  ?></td>
+                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_begin) ? helper::formatDate($task->date_begin) : '' ?></td>
+                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_end) ? helper::formatDate($task->date_end) : '' ?></td>
                             <td class="py-2 px-4 border-b">
                                 <a href="/show/<?= $task->task_id ?>"
                                    class="text-blue-500 cursor-pointer">Просмотреть</a>
@@ -78,25 +89,25 @@ $tasks = $task->tasksByUserId($user_id);
                                 </form>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="py-2 px-4 border-b text-center">Задачи не найдены</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4" class="py-2 px-4 border-b text-center">Задачи не найдены</td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let now = new Date();
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let now = new Date();
 
-            // Корректируем время на часовой пояс пользователя
-            let timezoneOffset = now.getTimezoneOffset() * 60000; // Получаем смещение в миллисекундах
-            let localDateTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+        let timezoneOffset = now.getTimezoneOffset() * 60000;
+        let localDateTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
 
-            document.getElementById("startDate").value = localDateTime;
-        });
-    </script>
+        document.getElementById("startDate").value = localDateTime;
+    });
+</script>
 <?php require_once __DIR__ . "/footer.php" ?>

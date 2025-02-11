@@ -8,5 +8,13 @@ class helper{
     public static function formatDate($date){
         return date('H:i:s d.m.Y', strtotime($date));
     }
+
+    public static function checkOverdue($value): int{
+        if($value === 0){
+            return False;
+        }
+        return True;
+    }
+
 }
 ?>

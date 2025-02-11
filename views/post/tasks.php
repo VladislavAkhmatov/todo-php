@@ -8,7 +8,8 @@ if(isset($_POST['add_task'])){
     $user_id = $_SESSION['user_id'];
     $date_begin = $_POST['date_begin'];
     $date_end = $_POST['date_end'];
-    if($task->saveTask($user_id, $task_text, $date_begin, $date_end)){
+    $overdue = $_POST['overdue'];
+    if($task->saveTask($user_id, $task_text, $date_begin, $date_end, $overdue)){
         Header("Location: /");
         exit();
     }else{
