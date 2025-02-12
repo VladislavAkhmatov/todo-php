@@ -12,16 +12,50 @@ if (!isset($_SESSION['user_id'])) {
 $task = new TaskController();
 $user_id = $_SESSION['user_id'];
 $tasks = $task->tasksByUserId($user_id);
+$overdueTasks = $task->overdueTasksByUserId($user_id);
 ?>
 
 
-<div class="mb-6 bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-auto">
+<div class="bg-white overflow-y-auto p-8 rounded-lg shadow-lg w-full max-w-2xl mx-auto max-h-screen">
     <!-- Рекламные блоки -->
-    <div class="mb-6">
-        <div class="bg-gray-100 p-4 rounded-lg shadow-md text-center">
-            <p class="text-lg font-semibold">Реклама 1</p>
-            <p class="text-sm text-gray-600">Здесь может быть ваша реклама.</p>
-        </div>
+    <h1 class="text-2xl font-bold text-center">Просроченные задачи</h1>
+
+    <div class="mb-6 overflow-x-hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-l max-h-40 mx-auto bg-red-200">
+        <table class="w-full bg-white border border-gray-300">
+            <thead>
+            <tr>
+                <th class="py-2 px-4 border-b">Задача</th>
+                <th class="py-2 px-4 border-b hidden md:table-cell">Дата начала</th>
+                <th class="py-2 px-4 border-b hidden md:table-cell">Дата окончания</th>
+                <th class="py-2 px-4 border-b">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if ($overdueTasks): ?>
+                <?php foreach ($overdueTasks as $overdueTask): ?>
+                    <tr>
+                        <td class="py-2 px-4 border-b"><?= htmlspecialchars($overdueTask->task_text) ?></td>
+                        <td class="py-2 border-b hidden md:table-cell"><?= isset($overdueTask->date_begin) ? helper::formatDate($overdueTask->date_begin) : '' ?></td>
+                        <td class="py-2 border-b hidden md:table-cell"><?= isset($overdueTask->date_end) ? helper::formatDate($overdueTask->date_end) : '' ?></td>
+                        <td class="py-2 px-4 border-b">
+                            <a href="/show/<?= $overdueTask->task_id ?>"
+                               class="text-blue-500 cursor-pointer">Просмотреть</a>
+                            <form action="/" METHOD="POST" class="inline">
+                                <input name="task_id" type="hidden" value="<?= $overdueTask->task_id ?>">
+                                <button name="delete_task" class="text-red-500 cursor-pointer"
+                                        onclick="return confirm('Вы уверены?')">Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="4" class="py-2 px-4 border-b text-center">Задачи не найдены</td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
     </div>
 
     <h1 class="text-2xl font-bold text-center mb-2">Todo List</h1>
@@ -59,7 +93,7 @@ $tasks = $task->tasksByUserId($user_id);
     </form>
 
 
-    <div class="overflow-x-hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-60 mx-auto">
+    <div class="overflow-x-hidden bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-60 mx-auto bg-green-200">
         <table class="w-full bg-white border border-gray-300">
             <thead>
             <tr>
@@ -72,24 +106,23 @@ $tasks = $task->tasksByUserId($user_id);
             <tbody>
             <?php if ($tasks): ?>
                 <?php foreach ($tasks as $task): ?>
-                    <?php if (helper::checkOverdue($task->overdue)): ?>
-                        <tr>
-                            <td class="py-2 px-4 border-b"><?= htmlspecialchars($task->task_text) ?></td>
-                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_begin) ? helper::formatDate($task->date_begin) : '' ?></td>
-                            <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_end) ? helper::formatDate($task->date_end) : '' ?></td>
-                            <td class="py-2 px-4 border-b">
-                                <a href="/show/<?= $task->task_id ?>"
-                                   class="text-blue-500 cursor-pointer">Просмотреть</a>
-                                <a href="/edit/<?= $task->task_id ?>" class="text-green-500 cursor-pointer">Редактировать</a>
-                                <form action="/" METHOD="POST" class="inline">
-                                    <input name="task_id" type="hidden" value="<?= $task->task_id ?>">
-                                    <button name="delete_task" class="text-red-500 cursor-pointer"
-                                            onclick="return confirm('Вы уверены?')">Удалить
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
+                    <tr>
+                        <td class="py-2 px-4 border-b"><?= htmlspecialchars($task->task_text) ?></td>
+                        <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_begin) ? helper::formatDate($task->date_begin) : '' ?></td>
+                        <td class="py-2 border-b hidden md:table-cell"><?= isset($task->date_end) ? helper::formatDate($task->date_end) : '' ?></td>
+                        <td class="py-2 px-4 border-b">
+                            <a href="/show/<?= $task->task_id ?>"
+                               class="text-blue-500 cursor-pointer">Просмотреть</a>
+                            <a href="/edit/<?= $task->task_id ?>"
+                               class="text-green-500 cursor-pointer">Редактировать</a>
+                            <form action="/" METHOD="POST" class="inline">
+                                <input name="task_id" type="hidden" value="<?= $task->task_id ?>">
+                                <button name="delete_task" class="text-red-500 cursor-pointer"
+                                        onclick="return confirm('Вы уверены?')">Удалить
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>

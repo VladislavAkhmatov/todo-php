@@ -37,7 +37,12 @@ class TaskController extends Connect
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
-
+    public function overdueTasksByUserId($user_id){
+        $query = $this->db->prepare("SELECT * FROM tasks WHERE user_id = :user_id AND overdue = 0");
+        $query->bindParam(":user_id", $user_id);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
     public function saveTask($user_id, $task_text, $date_begin, $date_end, $overdue)
     {
         $query = $this->db->prepare("INSERT INTO tasks (user_id, task_text, date_begin, date_end, overdue) VALUES(:user_id, :task_text, :date_begin, :date_end, :overdue)");
